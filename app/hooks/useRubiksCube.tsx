@@ -1,12 +1,20 @@
 import { useState } from "react"
-import { ClockwiseFaceRotation, CounterClockwiseFaceRotation, DoubleLayerTurns, InverseDoubleLayerTurns, RubiksCube, SlycesTurns } from "./types"
+import { ClockwiseFaceRotation, CounterClockwiseFaceRotation, CubeActions, DoubleLayerTurns, InverseDoubleLayerTurns, RubiksCube, SlycesTurns } from "../types"
 
 export default function useRubikCube (initialState: RubiksCube) {
 
     const [cube, setCube] = useState(initialState)
+    
+    const [history, setHistory] = useState<CubeActions[]>([])
+
+    const Reset = () => {
+      setCube(initialState)
+      setHistory([])
+    }
 
     const ClockwiseMoves: {[key in ClockwiseFaceRotation]: () => void} = {
         "U": () => {
+          setHistory(prev => [...prev, "U"] as CubeActions[])
           setCube(prev => (
             {
               ...prev,
@@ -39,6 +47,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "L": () => {
+          setHistory(prev => [...prev, "L"])
           setCube(prev => (
             {
               ...prev,
@@ -48,9 +57,9 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.L[2][2], prev.L[1][2], prev.L[0][2]]
               ],
               U: [
-                [prev.B[0][2], prev.U[0][1], prev.U[0][2]],
+                [prev.B[2][2], prev.U[0][1], prev.U[0][2]],
                 [prev.B[1][2], prev.U[1][1], prev.U[1][2]],
-                [prev.B[2][2], prev.U[2][1], prev.U[2][2]]
+                [prev.B[0][2], prev.U[2][1], prev.U[2][2]]
               ],
               F: [
                 [prev.U[0][0], prev.F[0][1], prev.F[0][2]],
@@ -63,15 +72,16 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.F[2][0], prev.D[2][1], prev.D[2][2]]
               ],
               B: [
-                [prev.B[0][0], prev.B[0][1], prev.D[0][0]],
+                [prev.B[0][0], prev.B[0][1], prev.D[2][0]],
                 [prev.B[1][0], prev.B[1][1], prev.D[1][0]],
-                [prev.B[2][0], prev.B[2][1], prev.D[2][0]]
+                [prev.B[2][0], prev.B[2][1], prev.D[0][0]]
               ]
               ,
             }
           ))
         },
         "F": () => {
+          setHistory(prev => [...prev, "F"])
           setCube(prev => (
             {
               ...prev,
@@ -91,7 +101,7 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.U[2][2], prev.R[2][1], prev.R[2][2]]
               ],
               D: [
-                [prev.R[0][0], prev.R[1][0], prev.R[2][0]],
+                [prev.R[2][0], prev.R[1][0], prev.R[0][0]],
                 [prev.D[1][0], prev.D[1][1], prev.D[1][2]],
                 [prev.D[2][0], prev.D[2][1], prev.D[2][2]]
               ],
@@ -105,6 +115,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "R": () => {
+          setHistory(prev => [...prev, "R"])
           setCube(prev => (
             {
               ...prev,
@@ -119,14 +130,14 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.U[2][0], prev.U[2][1], prev.F[2][2]]
               ],
               B: [
-                [prev.U[0][2], prev.B[0][1], prev.B[0][2]],
+                [prev.U[2][2], prev.B[0][1], prev.B[0][2]],
                 [prev.U[1][2], prev.B[1][1], prev.B[1][2]],
-                [prev.U[2][2], prev.B[2][1], prev.B[2][2]]
+                [prev.U[0][2], prev.B[2][1], prev.B[2][2]]
               ],
               D: [
-                [prev.D[0][0], prev.D[0][1], prev.B[0][0]],
+                [prev.D[0][0], prev.D[0][1], prev.B[2][0]],
                 [prev.D[1][0], prev.D[1][1], prev.B[1][0]],
-                [prev.D[2][0], prev.D[2][1], prev.B[2][0]]
+                [prev.D[2][0], prev.D[2][1], prev.B[0][0]]
               ],
               F: [
                 [prev.F[0][0], prev.F[0][1], prev.D[0][2]],
@@ -138,6 +149,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "B": () => {
+          setHistory(prev => [...prev, "B"])
           setCube(prev => (
             {
               ...prev,
@@ -152,9 +164,9 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.L[0][0], prev.L[1][0], prev.L[2][0]]
               ],
               L: [
-                [prev.U[0][0], prev.L[0][1], prev.L[0][2]],
+                [prev.U[0][2], prev.L[0][1], prev.L[0][2]],
                 [prev.U[0][1], prev.L[1][1], prev.L[1][2]],
-                [prev.U[0][2], prev.L[2][1], prev.L[2][2]]
+                [prev.U[0][0], prev.L[2][1], prev.L[2][2]]
               ],
               U: [
                 [prev.R[0][2], prev.R[1][2], prev.R[2][2]],
@@ -162,15 +174,16 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.U[2][0], prev.U[2][1], prev.U[2][2]]
               ],
               R: [
-                [prev.R[0][0], prev.R[0][1], prev.D[2][0]],
+                [prev.R[0][0], prev.R[0][1], prev.D[2][2]],
                 [prev.R[1][0], prev.R[1][1], prev.D[2][1]],
-                [prev.R[2][0], prev.R[2][1], prev.D[2][2]]
+                [prev.R[2][0], prev.R[2][1], prev.D[2][0]]
               ]
               ,
             }
           ))
         },
         "D": () => {
+          setHistory(prev => [...prev, "D"])
           setCube(prev => (
             {
               ...prev,
@@ -206,6 +219,7 @@ export default function useRubikCube (initialState: RubiksCube) {
       
       const CounterClockwiseMoves: {[key in CounterClockwiseFaceRotation]: () => void} = {
         "U'": () => {
+          setHistory(prev => [...prev, "U'"])
           setCube(prev => (
             {
               ...prev,
@@ -238,6 +252,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "L'": () => {
+          setHistory(prev => [...prev, "L'"])
           setCube(prev => (
             {
               ...prev,
@@ -257,20 +272,21 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.D[2][0], prev.F[2][1], prev.F[2][2]]
               ],
               D: [
-                [prev.B[0][2], prev.D[0][1], prev.D[0][2]],
+                [prev.B[2][2], prev.D[0][1], prev.D[0][2]],
                 [prev.B[1][2], prev.D[1][1], prev.D[1][2]],
-                [prev.B[2][2], prev.D[2][1], prev.D[2][2]]
+                [prev.B[0][2], prev.D[2][1], prev.D[2][2]]
               ],
               B: [
-                [prev.B[0][0], prev.B[0][1], prev.U[0][0]],
+                [prev.B[0][0], prev.B[0][1], prev.U[2][0]],
                 [prev.B[1][0], prev.B[1][1], prev.U[1][0]],
-                [prev.B[2][0], prev.B[2][1], prev.U[2][0]]
+                [prev.B[2][0], prev.B[2][1], prev.U[0][0]]
               ]
               ,
             }
           ))
         },
         "F'": () => {
+          setHistory(prev => [...prev, "F'"])
           setCube(prev => (
             {
               ...prev,
@@ -285,9 +301,9 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.R[0][0], prev.R[1][0], prev.R[2][0]]
               ],
               R: [
-                [prev.D[0][0], prev.R[0][1], prev.R[0][2]],
+                [prev.D[0][2], prev.R[0][1], prev.R[0][2]],
                 [prev.D[0][1], prev.R[1][1], prev.R[1][2]],
-                [prev.D[0][2], prev.R[2][1], prev.R[2][2]]
+                [prev.D[0][0], prev.R[2][1], prev.R[2][2]]
               ],
               D: [
                 [prev.L[0][2], prev.L[1][2], prev.L[2][2]],
@@ -295,15 +311,16 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.D[2][0], prev.D[2][1], prev.D[2][2]]
               ],
               L: [
-                [prev.L[0][0], prev.L[0][1], prev.U[2][0]],
+                [prev.L[0][0], prev.L[0][1], prev.U[2][2]],
                 [prev.L[1][0], prev.L[1][1], prev.U[2][1]],
-                [prev.L[2][0], prev.L[2][1], prev.U[2][2]]
+                [prev.L[2][0], prev.L[2][1], prev.U[2][0]]
               ]
               ,
             }
           ))
         },
         "R'": () => {
+          setHistory(prev => [...prev, "R'"])
           setCube(prev => (
             {
               ...prev,
@@ -313,14 +330,14 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.R[0][0], prev.R[1][0], prev.R[2][0]]
               ],
               U: [
-                [prev.U[0][0], prev.U[0][1], prev.B[0][0]],
+                [prev.U[0][0], prev.U[0][1], prev.B[2][0]],
                 [prev.U[1][0], prev.U[1][1], prev.B[1][0]],
-                [prev.U[2][0], prev.U[2][1], prev.B[2][0]]
+                [prev.U[2][0], prev.U[2][1], prev.B[0][0]]
               ],
               B: [
-                [prev.D[0][2], prev.B[0][1], prev.B[0][2]],
+                [prev.D[2][2], prev.B[0][1], prev.B[0][2]],
                 [prev.D[1][2], prev.B[1][1], prev.B[1][2]],
-                [prev.D[2][2], prev.B[2][1], prev.B[2][2]]
+                [prev.D[0][2], prev.B[2][1], prev.B[2][2]]
               ],
               D: [
                 [prev.D[0][0], prev.D[0][1], prev.F[0][2]],
@@ -337,6 +354,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "B'": () => {
+          setHistory(prev => [...prev, "B'"])
           setCube(prev => (
             {
               ...prev,
@@ -348,7 +366,7 @@ export default function useRubikCube (initialState: RubiksCube) {
               D: [
                 [prev.D[0][0], prev.D[0][1], prev.D[0][2]],
                 [prev.D[1][0], prev.D[1][1], prev.D[1][2]],
-                [prev.R[0][2], prev.R[1][2], prev.R[2][2]]
+                [prev.R[2][2], prev.R[1][2], prev.R[0][2]]
               ],
               L: [
                 [prev.D[2][0], prev.L[0][1], prev.L[0][2]],
@@ -356,7 +374,7 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.D[2][2], prev.L[2][1], prev.L[2][2]]
               ],
               U: [
-                [prev.L[0][0], prev.L[1][0], prev.L[2][0]],
+                [prev.L[2][0], prev.L[1][0], prev.L[0][0]],
                 [prev.U[1][0], prev.U[1][1], prev.U[1][2]],
                 [prev.U[2][0], prev.U[2][1], prev.U[2][2]]
               ],
@@ -370,6 +388,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "D'": () => {
+          setHistory(prev => [...prev, "D'"])
           setCube(prev => (
             {
               ...prev,
@@ -405,13 +424,14 @@ export default function useRubikCube (initialState: RubiksCube) {
 
       const SliceTurnsMoves: {[key in SlycesTurns]: () => void} = {
         "M": () => {
+          setHistory(prev => [...prev, "M"])
           setCube(prev => (
             {
               ...prev,
               U: [
-                [prev.U[0][0], prev.B[0][1], prev.U[0][2]],
+                [prev.U[0][0], prev.B[2][1], prev.U[0][2]],
                 [prev.U[1][0], prev.B[1][1], prev.U[1][2]],
-                [prev.U[2][0], prev.B[2][1], prev.U[2][2]]
+                [prev.U[2][0], prev.B[0][1], prev.U[2][2]]
               ],
               F: [
                 [prev.F[0][0], prev.U[0][1], prev.F[0][2]],
@@ -424,14 +444,15 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.D[2][0], prev.F[2][1], prev.D[2][2]]
               ],
               B: [
-                [prev.B[0][0], prev.D[0][1], prev.B[0][2]],
+                [prev.B[0][0], prev.D[2][1], prev.B[0][2]],
                 [prev.B[1][0], prev.D[1][1], prev.B[1][2]],
-                [prev.B[2][0], prev.D[2][1], prev.B[2][2]]
+                [prev.B[2][0], prev.D[0][1], prev.B[2][2]]
               ]
             }
           ))
         },
         "M'": () => {
+          setHistory(prev => [...prev, "M'"])
           setCube(prev => (
             {
               ...prev,
@@ -446,19 +467,20 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [prev.F[2][0], prev.D[2][1], prev.F[2][2]]
               ],
               D: [
-                [prev.D[0][0], prev.B[0][1], prev.D[0][2]],
+                [prev.D[0][0], prev.B[2][1], prev.D[0][2]],
                 [prev.D[1][0], prev.B[1][1], prev.D[1][2]],
-                [prev.D[2][0], prev.B[2][1], prev.D[2][2]]
+                [prev.D[2][0], prev.B[0][1], prev.D[2][2]]
               ],
               B: [
-                [prev.B[0][0], prev.U[0][1], prev.B[0][2]],
+                [prev.B[0][0], prev.U[2][1], prev.B[0][2]],
                 [prev.B[1][0], prev.U[1][1], prev.B[1][2]],
-                [prev.B[2][0], prev.U[2][1], prev.B[2][2]]
+                [prev.B[2][0], prev.U[0][1], prev.B[2][2]]
               ]
             }
           ))
         },
         "E": () => {
+          setHistory(prev => [...prev, "E"])
           setCube(prev => (
             {
               ...prev,
@@ -486,6 +508,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "E'": () => {
+          setHistory(prev => [...prev, "E'"])
           setCube(prev => (
             {
               ...prev,
@@ -513,6 +536,7 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "S": () => {
+          setHistory(prev => [...prev, "S"])
           setCube(prev => (
             {
               ...prev,
@@ -528,7 +552,7 @@ export default function useRubikCube (initialState: RubiksCube) {
               ],
               D: [
                 [...prev.D[0]],
-                [prev.R[0][1], prev.R[1][1], prev.R[2][1]],
+                [prev.R[2][1], prev.R[1][1], prev.R[0][1]],
                 [...prev.D[2]]
               ],
               L: [
@@ -540,18 +564,19 @@ export default function useRubikCube (initialState: RubiksCube) {
           ))
         },
         "S'": () => {
+          setHistory(prev => [...prev, "S'"])
           setCube(prev => (
             {
               ...prev,
               U: [
                 [...prev.U[0]],
-                [prev.R[2][1], prev.R[1][1], prev.R[0][1]],
+                [prev.R[0][1], prev.R[1][1], prev.R[2][1]],
                 [...prev.U[2]]
               ],
               R: [
-                [prev.R[0][0], prev.D[1][0], prev.R[0][2]],
+                [prev.R[0][0], prev.D[1][2], prev.R[0][2]],
                 [prev.R[1][0], prev.D[1][1], prev.R[1][2]],
-                [prev.R[2][0], prev.D[1][2], prev.R[2][2]]
+                [prev.R[2][0], prev.D[1][0], prev.R[2][2]]
               ],
               D: [
                 [...prev.D[0]],
@@ -559,9 +584,9 @@ export default function useRubikCube (initialState: RubiksCube) {
                 [...prev.D[2]]
               ],
               L: [
-                [prev.L[0][0], prev.U[1][0], prev.L[0][2]],
+                [prev.L[0][0], prev.U[1][2], prev.L[0][2]],
                 [prev.L[1][0], prev.U[1][1], prev.L[1][2]],
-                [prev.L[2][0], prev.U[1][2], prev.L[2][2]]
+                [prev.L[2][0], prev.U[1][0], prev.L[2][2]]
               ]
             }
           ))
@@ -969,6 +994,8 @@ export default function useRubikCube (initialState: RubiksCube) {
 
     return {
         cube,
+        history,
+        Reset,
         ClockwiseMoves,
         CounterClockwiseMoves,
         SliceTurnsMoves,
