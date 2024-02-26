@@ -5,24 +5,24 @@ import { CubeActions, Face, RubiksCube } from "./types";
 import useRubikCube from "./hooks/useRubiksCube";
 
 const Cube_3x3: RubiksCube = {
-  "F": [['gray', 'gray', 'gray'],
-        ['gray', 'gray', 'gray'],
-        ['gray', 'gray', 'gray']],
-  "R": [['orange', 'orange', 'orange'],
-        ['orange', 'orange', 'orange'],
-        ['orange', 'orange', 'orange']],
-  "L": [['red', 'red', 'red'],
-        ['red', 'red', 'red'],
-        ['red', 'red', 'red']],
-  "U": [['green', 'green', 'green'],
-        ['green', 'green', 'green'],
-        ['green', 'green', 'green']],
-  "D": [['blue', 'blue', 'blue'],
-        ['blue', 'blue', 'blue'],
-        ['blue', 'blue', 'blue']],
-  "B": [['yellow', 'yellow', 'yellow'],
-        ['yellow', 'yellow', 'yellow'],
-        ['yellow', 'yellow', 'yellow']],
+  "F": [['bg-gray-500', 'bg-gray-500', 'bg-gray-500'],
+        ['bg-gray-500', 'bg-gray-500', 'bg-gray-500'],
+        ['bg-gray-500', 'bg-gray-500', 'bg-gray-500']],
+  "R": [['bg-orange-500', 'bg-orange-500', 'bg-orange-500'],
+        ['bg-orange-500', 'bg-orange-500', 'bg-orange-500'],
+        ['bg-orange-500', 'bg-orange-500', 'bg-orange-500']],
+  "L": [['bg-red-500', 'bg-red-500', 'bg-red-500'],
+        ['bg-red-500', 'bg-red-500', 'bg-red-500'],
+        ['bg-red-500', 'bg-red-500', 'bg-red-500']],
+  "U": [['bg-green-500', 'bg-green-500', 'bg-green-500'],
+        ['bg-green-500', 'bg-green-500', 'bg-green-500'],
+        ['bg-green-500', 'bg-green-500', 'bg-green-500']],
+  "D": [['bg-blue-500', 'bg-blue-500', 'bg-blue-500'],
+        ['bg-blue-500', 'bg-blue-500', 'bg-blue-500'],
+        ['bg-blue-500', 'bg-blue-500', 'bg-blue-500']],
+  "B": [['bg-yellow-500', 'bg-yellow-500', 'bg-yellow-500'],
+        ['bg-yellow-500', 'bg-yellow-500', 'bg-yellow-500'],
+        ['bg-yellow-500', 'bg-yellow-500', 'bg-yellow-500']],
 } 
 
 const gridPositions: {[key in Face]: string}  = {
@@ -61,7 +61,7 @@ export default function Home() {
                     {
                       row.map((cell, k) => 
                         <div key={`cell-${face}-${i}-${j}-${k}`}
-                          className={`bg-${cell}-500 border-2 border-black rounded-lg h-14 w-14 min-w-14 flex justify-center items-center text-black font-extrabold `}
+                          className={`${cell} border-2 border-black rounded-lg h-14 w-14 min-w-14 flex justify-center items-center text-black font-extrabold `}
                         >
                           {j == 1 && k == 1 && face}
 
