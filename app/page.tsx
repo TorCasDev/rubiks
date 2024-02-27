@@ -33,25 +33,24 @@ const gridPositions: {[key in Face]: string}  = {
   "B": "col-start-4 row-start_2 col-end-5 row-end-3",
   "D": "col-start-2 row-start_3 col-end-3 row-end-4",
 }
-
-// const Effect3D = {
-//   "U":" -rotate-[43deg] skew-x-[22deg] skew-y-[14deg] -translate-x-[5.2rem] translate-y-9",
-//   "L":" skew-y-[25deg]",
-//   "F":" -skew-y-[30deg] -translate-y-2",
-//   "R":" -skew-y-[25deg]",
-//   "B":" skew-y-[30deg] translate-y-2",
-//   "D":" -rotate-[132deg] -skew-x-[16deg] -skew-y-[20deg] translate-x-[5.6rem] -translate-y-9",
-// }
   
 export default function Home() {
 
-  const [isIn3D, togleIsIn3D] = useState<boolean>(false)
-
-  const {cube, history, Reset, ClockwiseMoves, CounterClockwiseMoves, SliceTurnsMoves, DoubleLayerMoves, InverseDoubleLayerMoves } = useRubikCube(Cube_3x3)
+  const {
+    cube, 
+    history, 
+    Reset, 
+    ClockwiseMoves, 
+    CounterClockwiseMoves, 
+    SliceTurnsMoves, 
+    DoubleLayerMoves, 
+    InverseDoubleLayerMoves, 
+    WholeCubeRotations 
+  } = useRubikCube(Cube_3x3)
 
   return (
     <main className="flex min-h-screen items-center p-10 ">
-      <div className={`grid ${isIn3D ? "grid-cols-5 w-[52,5rem]" : "grid-cols-4 w-[42rem]"}  grid-rows-3 `} >
+      <div className={`grid grid-cols-4 w-[42rem] grid-rows-3 `} >
         {
           Object.entries(cube).map(([face, rows], i) => 
           <div key={`${face}-${i}`} className={`flex border border-white rounded-lg flex-col ${gridPositions[face as Face]}`}>
@@ -79,8 +78,9 @@ export default function Home() {
         <ActionGroup title={"Clockwise moves"} actions={ClockwiseMoves}/>
         <ActionGroup title={"Counter clockwise moves"} actions={CounterClockwiseMoves}/>
         <ActionGroup title={"Slice turns moves"} actions={SliceTurnsMoves}/>
-        {/* <ActionGroup title={"Double layer moves"} actions={DoubleLayerMoves}/>
-        <ActionGroup title={"Inverse double layer moves"} actions={InverseDoubleLayerMoves}/> */}
+        <ActionGroup title={"Double layer moves"} actions={DoubleLayerMoves}/>
+        <ActionGroup title={"Inverse double layer moves"} actions={InverseDoubleLayerMoves}/>
+        <ActionGroup title={"Whole cube rotations"} actions={WholeCubeRotations}/>
         
         {!!history.length && 
           <>
