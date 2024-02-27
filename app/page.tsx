@@ -50,7 +50,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen items-center p-10 ">
-      <div className={`grid grid-cols-4 w-[42rem] grid-rows-3 `} >
+      <div className={`grid grid-cols-4 w-[42.5rem] grid-rows-3 `} >
         {
           Object.entries(cube).map(([face, rows], i) => 
           <div key={`${face}-${i}`} className={`flex border border-white rounded-lg flex-col ${gridPositions[face as Face]}`}>
@@ -63,7 +63,6 @@ export default function Home() {
                           className={`${cell} border-2 border-black rounded-lg h-14 w-14 min-w-14 flex justify-center items-center text-black font-extrabold `}
                         >
                           {j == 1 && k == 1 && face}
-
                         </div>
                       )
                     }
