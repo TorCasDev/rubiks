@@ -1,5 +1,17 @@
 import { useState } from "react"
-import { ClockwiseFaceRotation, CounterClockwiseFaceRotation, CubeActions, DoubleLayerTurns, InverseDoubleLayerTurns, RubiksCube, SlycesTurns, WholeCubeRotations } from "../types"
+import {
+  Face,
+  ClockwiseFaceRotationFunctions,
+  CounterClockwiseFaceRotationFunctions,
+  CubeActions,
+  DoubleLayerTurnsFunctions,
+  InverseDoubleLayerTurnsFunctions,
+  RubiksCube,
+  SlycesTurnsFunctions,
+  WholeCubeRotationsFunctions,
+  Position,
+  FaceIndex
+} from "../types"
 
 export default function useRubikCube(initialState: RubiksCube) {
 
@@ -12,7 +24,9 @@ export default function useRubikCube(initialState: RubiksCube) {
     setHistory([])
   }
 
-  const ClockwiseMoves: { [key in ClockwiseFaceRotation]: () => void } = {
+  const Repeat = (times: number, move: () => void) => new Array(times).fill("").forEach((e, i) => move())
+
+  const ClockwiseMoves: ClockwiseFaceRotationFunctions = {
     "U": () => {
       setHistory(prev => [...prev, "U"] as CubeActions[])
       setCube(prev => (
@@ -213,7 +227,7 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
-  const CounterClockwiseMoves: { [key in CounterClockwiseFaceRotation]: () => void } = {
+  const CounterClockwiseMoves: CounterClockwiseFaceRotationFunctions = {
     "U'": () => {
       setHistory(prev => [...prev, "U'"])
       setCube(prev => (
@@ -414,7 +428,7 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
-  const SliceTurnsMoves: { [key in SlycesTurns]: () => void } = {
+  const SliceTurnsMoves: SlycesTurnsFunctions = {
     "M": () => {
       setHistory(prev => [...prev, "M"])
       setCube(prev => (
@@ -585,7 +599,7 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
-  const DoubleLayerMoves: { [key in DoubleLayerTurns]: () => void } = {
+  const DoubleLayerMoves: DoubleLayerTurnsFunctions = {
     "u": () => {
       setHistory(prev => [...prev, "u"] as CubeActions[])
       setCube(prev => (
@@ -786,7 +800,7 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
-  const InverseDoubleLayerMoves: { [key in InverseDoubleLayerTurns]: () => void } = {
+  const InverseDoubleLayerMoves: InverseDoubleLayerTurnsFunctions = {
     "u'": () => {
       setHistory(prev => [...prev, "u'"])
       setCube(prev => (
@@ -987,7 +1001,7 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
-  const WholeCubeRotations: { [key in WholeCubeRotations]: () => void } = {
+  const WholeCubeRotations: WholeCubeRotationsFunctions = {
     "X": () => {
       setHistory(prev => [...prev, "X"])
       setCube(prev => (
@@ -1164,6 +1178,47 @@ export default function useRubikCube(initialState: RubiksCube) {
     }
   }
 
+  const SolveFirstLayer = () => {
+    
+    const WhiteFace = Object.entries(cube).reduce((acc, [face, colors]) => colors[1][1] === "bg-gray-500" ? face : acc, "")
+
+    if (WhiteFace != "F") {
+      switch (WhiteFace) {
+        case "U":
+          WholeCubeRotations["X'"]()
+          break;
+        case "L":
+          WholeCubeRotations["Y'"]()
+          break;
+        case "R":
+          WholeCubeRotations["Y"]()
+          break;
+        case "B":
+          Repeat(2, WholeCubeRotations["X"])
+          break;
+        case "D":
+          WholeCubeRotations["X"]()
+          break;
+      }
+    }
+
+    const whiteEdges = Object.entries(cube).reduce<Position[]>((acc, [face, colors]) => {
+      colors.map((row, x) => row.map((color, y) => {
+        if (color == "bg-gray-500" && (x === 1 || y === 1) && !(x===1 && y===1)) {
+          const position: Position = [face as Face, x as FaceIndex, y as FaceIndex]
+          acc.push(position)
+        }
+      }))
+      return acc
+    }, [])
+
+    whiteEdges.forEach(([face, x, y]) => {
+      
+    })
+
+
+  }
+
 
   return {
     cube,
@@ -1174,7 +1229,8 @@ export default function useRubikCube(initialState: RubiksCube) {
     SliceTurnsMoves,
     DoubleLayerMoves,
     InverseDoubleLayerMoves,
-    WholeCubeRotations
+    WholeCubeRotations,
+    SolveFirstLayer
   }
 }
 
