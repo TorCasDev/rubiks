@@ -81,9 +81,9 @@ export default function Home() {
         <ActionGroup title={"Double layer moves"} actions={DoubleLayerMoves}/>
         <ActionGroup title={"Inverse double layer moves"} actions={InverseDoubleLayerMoves}/>
         <ActionGroup title={"Whole cube rotations"} actions={WholeCubeRotations}/>
-        <button onClick={SolveFirstLayer} className="bg-red-200 p-4 rounded-lg">
+        {/* <button onClick={SolveFirstLayer} className="bg-red-200 p-4 rounded-lg">
         Primera cara
-        </button>
+        </button> */}
         
         {!!history.length && 
           <>
